@@ -10,8 +10,11 @@ export function retryAxios(client: AxiosInstance, config: IRetryConfig) {
     onRetryAttempt: (err) => {
       const raxConfig = rax.getConfig(err)
       if (raxConfig) {
+        if (raxConfig.currentRetryAttempt && raxConfig.retryDelay) {
+          raxConfig.retryDelay = raxConfig.currentRetryAttempt * raxConfig.retryDelay
+        }
         // eslint-disable-next-line no-console
-        console.warn(`Retry attempt #${raxConfig.currentRetryAttempt}`)
+        console.warn(`Retry attempt #${raxConfig.currentRetryAttempt} message: ${err.message}`)
       }
     },
   }
